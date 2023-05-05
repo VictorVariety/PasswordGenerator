@@ -4,15 +4,15 @@
     {
         private static void Main(string[] args)
         {
-            if(IsInvalid(args))
+            if(IsInputInvalid(args))
             {
                 ErrorMessage();
                 return;
             }
             var num = Convert.ToInt32(args[0]);
             var str = args[1];
-
             var password = string.Empty;
+
             foreach (var x in str)
             {
                 if (x == 'L') password += RandomUpperCaseLetter();
@@ -35,15 +35,21 @@
 
 
 
-        private static bool IsInvalid(string[] args)
+        private static bool IsInputInvalid(string[] args)
         {
             if (args.Length != 2) return true;
 
-            var num = args[0];
-            var str = args[1];
+            return args[0].Any(x => !char.IsDigit(x)) ||
+                   args[1].Any(x => x is not ('l' or 'L' or 'd' or 's'));
 
-            return num.Any(x => !char.IsDigit(x)) ||
-                   str.Any(x => x is not ('l' or 'L' or 'd' or 's'));
+            //.Any() går igjennom alle elementer i arrays (strings er arrays av characters) og gir en bool basert på om den finner noe
+            //Men 'x => condition' som parameter gjør at den finner en bool om hvert element tilfredstiller en condition, likt som en if 
+            //Første linje sjekker om x ikke inneholder tall
+            //Andre linje sjekker om noen av x ikke er en av våre godtatte input tegn
+            // || gjør at om noen av disse linjene blir true så returnes true, fordi:
+            // true || false == true
+            // true || true == true
+            // false || false == false
         }
 
         private static char RandomUpperCaseLetter()
